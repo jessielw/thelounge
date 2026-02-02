@@ -40,9 +40,10 @@ export default <IrcEventHandler>function (irc, network) {
 		if (irc.connection.registered === false && !Config.values.public) {
 			message += " An attempt to use it will be made when this nick quits.";
 
-			// Store the user's preferred nick in keepNick so the quit handler can reclaim it
-			// This is the user's actual preference from network.nick, not a fallback
-			network.keepNick = network.nick;
+			// Store the user's preferred nick so the quit handler can reclaim it
+			network
+				.getNickKeeper()
+				.onNickInUse(network.nick, {registered: false, isPublic: Config.values.public});
 		}
 
 		const lobby = network.getLobby();
